@@ -1,0 +1,14 @@
+version: '3'
+services:
+  cli-to-rest:
+    build: ./app
+    container_name: cli-to-rest
+    environment:
+      - FLASK_DEBUG=1
+      - PYTHONUNBUFFERED=True
+    restart: on-failure
+    volumes:
+      - ./app:/app
+    ports:
+      - "5000:5000"
+    command: python main.py
