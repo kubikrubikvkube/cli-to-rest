@@ -4,9 +4,11 @@ services:
     build: ./app
     container_name: cli-to-rest
     environment:
-      - FLASK_DEBUG=1
-      - PYTHONUNBUFFERED=True
+      FLASK_DEBUG: True
+      PYTHONUNBUFFERED: True
     restart: on-failure
+    image: kubikrubikvkube/cli-to-rest:v0.1
+
     volumes:
       - ./app:/app
     ports:
