@@ -13,4 +13,4 @@ services:
       - ./app:/app
     ports:
       - "5000:5000"
-    command: python main.py
+    command: python main_controller.py
