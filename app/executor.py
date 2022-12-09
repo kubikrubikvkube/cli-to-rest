@@ -25,16 +25,23 @@ def execute(command: str, timeout: int = None, byte_input: str | bytes = None) -
 
 
 def is_running(pid: int) -> bool:
-    pid_info = execute(f"ps -p {pid}")
-    if pid_info is None:
+    # TODO dirty hack. Should be fixed.
+    # Python executor per-command creates a new shell
+    # where background jobs from other terminal session
+    # are not visible to current session. So using jobs -p
+    # usage are not available, but preferred.
+    # Also using 'trap' or scheduled cleanup job
+    # may be appropriate.
+    try:
+        pid_info = process_info(pid)
+        size = pid_info['size']
+        return True if int(size) > 0 else False
+    except Exception as e:
+        logging.error(e)
         return False
-    stdout = pid_info.stdout
-    stdout_lines = list(filter(lambda s: s != "", stdout.splitlines()))
-    headers_row = 1
-    return True if len(stdout_lines) > headers_row else False
 
 
-def process_info(pid: int) -> dict[str, str]:
+def process_info(pid: int) -> dict[str, any]:
     pid_info = execute(f"ps -Fp {pid}")
     if pid_info is None:
         return error_response
